@@ -28,9 +28,8 @@
 
         body {
             background-color: var(--bg-dark);
-            /* Fondo con imagen local en assets y respaldo en degradado espacial */
             background-image: 
-                linear-gradient(rgba(4, 8, 20, 0.7), rgba(4, 8, 20, 0.85)), 
+                linear-gradient(rgba(4, 8, 20, 0.75), rgba(4, 8, 20, 0.9)), 
                 url('assets/img/bg-space.jpg');
             background-size: cover;
             background-position: center;
@@ -55,19 +54,29 @@
             position: relative;
         }
 
-        .logo-container {
-            margin-bottom: 1.25rem;
+        /* Contenedor para mostrar ambos logos juntos (Tec + Parche Espacial) */
+        .logos-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
-        /* Estilo para el logo oficial cargado desde assets */
         .logo-container img {
-            max-height: 80px;
+            max-height: 65px;
             width: auto;
             object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.3));
+            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.3));
+        }
+
+        .rocket-logo-badge img {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
 
         .title {
@@ -365,6 +374,13 @@
             justify-content: center;
             font-size: 1rem;
             margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .badge-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .pos-badge {
@@ -433,9 +449,14 @@
         <header>
             <button class="admin-toggle-btn" onclick="toggleAdminMode()" id="adminBtn" title="Admin"></button>
             
-            <!-- Logo apuntando a la carpeta de recursos local assets/img/ -->
-            <div class="logo-container">
-                <img src="assets/img/logo-tec.png" alt="Tecnológico de Monterrey">
+            <!-- Contenedor con ambos logos (Tecnológico de Monterrey y Parche del Cohete) -->
+            <div class="logos-wrapper">
+                <div class="logo-container">
+                    <img src="assets/img/logo-tec.png" alt="Tecnológico de Monterrey">
+                </div>
+                <div class="rocket-logo-badge">
+                    <img src="assets/img/logo-rocket.jpg" alt="Parche Cohete">
+                </div>
             </div>
 
             <h1 class="title">🚀 COMPETENCIA DE COHETES FINALES 🚀</h1>
@@ -592,7 +613,7 @@
             filteredTeams.forEach((item) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td style="text-align: center;"><div class="badge-avatar">🚀</div></td>
+                    <td style="text-align: center;"><div class="badge-avatar"><img src="assets/img/logo-rocket.jpg" alt="Parche"></div></td>
                     <td style="text-align: center;"><span class="pos-badge">Pos ${item.pos}</span></td>
                     <td style="text-align: center;"><span class="group-tag">${escapeHtml(item.group || '-')}</span></td>
                     <td>
@@ -628,7 +649,7 @@
                 if (team) {
                     card.innerHTML = `
                         <div class="podium-title">${p.label} <span>${p.medal}</span></div>
-                        <div class="podium-avatar">🚀</div>
+                        <div class="podium-avatar"><img src="assets/img/logo-rocket.jpg" alt="Parche" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
                         <div class="podium-team">${escapeHtml(team.team)}</div>
                         <div class="podium-rocket">Cohete: ${escapeHtml(team.rocket)}</div>
                         <div class="podium-error">${team.errorPct}% Error</div>
