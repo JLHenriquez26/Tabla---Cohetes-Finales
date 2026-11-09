@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competencia de Cohetes Finales - Tabla de Posiciones</title>
+    <style>
+        :root {
+            --bg-dark: #040814;
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --card-border: rgba(56, 189, 248, 0.2);
+            --neon-cyan: #38bdf8;
+            --neon-green: #34d399;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --gold: #fbbf24;
+            --silver: #cbd5e1;
+            --bronze: #d97706;
+            --danger: #f87171;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 60%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Emblema espacial inspirado en la interfaz */
+        .space-badge {
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle, #0f172a 0%, #030712 100%);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), inset 0 0 15px rgba(56, 189, 248, 0.2);
+            position: relative;
+        }
+
+        .space-badge .icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .space-badge .badge-text {
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .title {
+            color: var(--neon-cyan);
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            margin-bottom: 0.4rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .sub-header {
+            color: var(--neon-cyan);
+            font-size: 1rem;
+            margin-top: 0.2rem;
+            font-weight: 600;
+        }
+
+        .admin-toggle-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            color: transparent;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Sección del Podio de Honor */
+        .podium-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .podium-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .podium-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .podium-card.gold { border-color: rgba(251, 191, 36, 0.5); box-shadow: 0 0 20px rgba(251, 191, 36, 0.15); }
+        .podium-card.silver { border-color: rgba(203, 213, 225, 0.5); box-shadow: 0 0 20px rgba(203, 213, 225, 0.15); }
+        .podium-card.bronze { border-color: rgba(217, 119, 6, 0.5); box-shadow: 0 0 20px rgba(217, 119, 6, 0.15); }
+
+        .podium-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .gold .podium-title { color: var(--gold); }
+        .silver .podium-title { color: var(--silver); }
+        .bronze .podium-title { color: var(--bronze); }
+
+        .podium-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 auto 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 2px solid currentColor;
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .gold .podium-avatar { color: var(--gold); border-color: var(--gold); }
+        .silver .podium-avatar { color: var(--silver); border-color: var(--silver); }
+        .bronze .podium-avatar { color: var(--bronze); border-color: var(--bronze); }
+
+        .podium-team {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .podium-rocket {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .podium-error {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            margin-top: 0.4rem;
+        }
+
+        /* Panel de Administración */
+        .admin-panel {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--neon-cyan);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+
+        .admin-panel.active { display: block; }
+
+        .admin-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .admin-title {
+            color: var(--neon-cyan);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .form-group input {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 0.6rem;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--neon-cyan);
+        }
+
+        .btn-submit {
+            background: var(--neon-cyan);
+            color: #040814;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+
+        .btn-submit:hover { opacity: 0.9; }
+
+        /* Contenedor de Búsqueda */
+        .controls-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.25rem;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            border-radius: 10px;
+            padding: 0.75rem 1rem 0.75rem 2.6rem;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--neon-cyan);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        /* Tabla de Posiciones */
+        .table-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .table-title-bar {
+            text-align: center;
+            padding: 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--card-border);
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background-color: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        th {
+            padding: 1rem 1.25rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        tr:hover {
+            background-color: rgba(56, 189, 248, 0.03);
+        }
+
+        .badge-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin: 0 auto;
+        }
+
+        .pos-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--neon-cyan);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .group-tag {
+            display: inline-block;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .team-name { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
+        .rocket-detail { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+        .error-val {
+            font-weight: 700;
+            color: var(--neon-green);
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .admin-active .btn-delete { display: inline-block; }
+
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .podium-container { grid-template-columns: 1fr; }
+            .title { font-size: 1.5rem; }
+            th, td { padding: 0.75rem 0.5rem; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <header>
+            <button class="admin-toggle-btn" onclick="toggleAdminMode()" id="adminBtn" title="Admin"></button>
+            
+            <div class="logo-container">
+                <div class="space-badge">
+                    <span class="icon">🚀</span>
+                    <span class="badge-text">Tec de Monterrey</span>
+                </div>
+            </div>
+
+            <h1 class="title">🚀 COMPETENCIA DE COHETES FINALES 🚀</h1>
+            <p class="subtitle">UNIDAD DE FORMACIÓN F1025B</p>
+            <p class="sub-header">Tabla de Posiciones General</p>
+        </header>
+
+        <!-- Podio de Honor Top 3 -->
+        <div class="podium-container" id="podiumContainer">
+            <!-- Renderizado dinámicamente -->
+        </div>
+
+        <!-- Panel de Administración -->
+        <div class="admin-panel" id="adminPanel">
+            <div class="admin-panel-header">
+                <span class="admin-title">📝 Registrar Nuevo Lanzamiento</span>
+                <button onclick="toggleAdminMode()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕ Cerrar</button>
+            </div>
+            <form id="rocketForm" onsubmit="addTeam(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Grupo</label>
+                        <input type="text" id="groupName" required placeholder="Ej: Grupo A">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre del Equipo</label>
+                        <input type="text" id="teamName" required placeholder="Ej: IGNITIA">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre del Cohete</label>
+                        <input type="text" id="rocketName" required placeholder="Ej: Ignitia-1">
+                    </div>
+                    <div class="form-group">
+                        <label>Altura Teórica (m)</label>
+                        <input type="number" step="0.01" id="theoreticalHeight" required placeholder="Ej: 150.0">
+                    </div>
+                    <div class="form-group">
+                        <label>Altura Sensor (m)</label>
+                        <input type="number" step="0.01" id="sensorHeight" required placeholder="Ej: 145.2">
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Guardar Registro</button>
+            </form>
+        </div>
+
+        <!-- Barra de Búsqueda -->
+        <div class="controls-wrapper">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar equipo, cohete o grupo..." oninput="renderLeaderboard()">
+            </div>
+        </div>
+
+        <!-- Tabla de Clasificación -->
+        <div class="table-wrapper">
+            <div class="table-title-bar">Tabla de Posiciones</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: center; width: 60px;">Parche</th>
+                        <th style="text-align: center; width: 60px;">Pos</th>
+                        <th style="text-align: center;">Grupo</th>
+                        <th>Equipo / Cohete</th>
+                        <th style="text-align: center;">Alt. Teórica</th>
+                        <th style="text-align: center;">Alt. Sensor</th>
+                        <th style="text-align: right;">% Error</th>
+                        <th class="admin-only-col" style="width: 40px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASS_ENCODED = "Um9ja2V0YWRtaW5TcGFjZQ==";
+        let isAdmin = false;
+
+        let teams = JSON.parse(localStorage.getItem('rocket_teams')) || [];
+
+        function calculateError(theoretical, sensor) {
+            if (!theoretical || theoretical === 0) return 0;
+            const error = (Math.abs(theoretical - sensor) / theoretical) * 100;
+            return Math.round(error * 100) / 100;
+        }
+
+        function toggleAdminMode() {
+            if (!isAdmin) {
+                const pass = prompt("Ingrese la contraseña de administrador:");
+                if (pass !== null) {
+                    if (pass === atob(ADMIN_PASS_ENCODED)) {
+                        isAdmin = true;
+                        document.getElementById('adminPanel').classList.add('active');
+                        document.getElementById('mainContainer').classList.add('admin-active');
+                    } else {
+                        alert("Contraseña incorrecta");
+                    }
+                }
+            } else {
+                isAdmin = false;
+                document.getElementById('adminPanel').classList.remove('active');
+                document.getElementById('mainContainer').classList.remove('admin-active');
+            }
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            const sorted = [...teams].sort((a, b) => {
+                return calculateError(a.theoreticalHeight, a.sensorHeight) - calculateError(b.theoreticalHeight, b.sensorHeight);
+            });
+
+            let currentPos = 1;
+            const rankedTeams = sorted.map((item, index) => {
+                const errorPct = calculateError(item.theoreticalHeight, item.sensorHeight);
+                
+                if (index > 0) {
+                    const prevErrorPct = calculateError(sorted[index - 1].theoreticalHeight, sorted[index - 1].sensorHeight);
+                    if (errorPct !== prevErrorPct) {
+                        currentPos = index + 1;
+                    }
+                }
+                
+                return {
+                    ...item,
+                    pos: currentPos,
+                    errorPct: errorPct
+                };
+            });
+
+            // Actualizar Podio Top 3
+            renderPodium(rankedTeams);
+
+            const filteredTeams = rankedTeams.filter(item => 
+                (item.group && item.group.toLowerCase().includes(searchTerm)) ||
+                item.team.toLowerCase().includes(searchTerm) || 
+                item.rocket.toLowerCase().includes(searchTerm)
+            );
+
+            const tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = '';
+
+            if (filteredTeams.length === 0) {
+                const emptyText = teams.length === 0 
+                    ? "Aún no hay equipos registrados."
+                    : "No se encontraron resultados que coincidan con la búsqueda.";
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty-state">${emptyText}</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filteredTeams.forEach((item) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;"><div class="badge-avatar">🚀</div></td>
+                    <td style="text-align: center;"><span class="pos-badge">Pos ${item.pos}</span></td>
+                    <td style="text-align: center;"><span class="group-tag">${escapeHtml(item.group || '-')}</span></td>
+                    <td>
+                        <div class="team-name">${escapeHtml(item.team)}</div>
+                        <div class="rocket-detail">Cohete: ${escapeHtml(item.rocket)} | ${item.errorPct}% Error</div>
+                    </td>
+                    <td style="text-align: center;">${item.theoreticalHeight} m</td>
+                    <td style="text-align: center;">${item.sensorHeight} m</td>
+                    <td style="text-align: right;" class="error-val">${item.errorPct}%</td>
+                    <td style="text-align: center;">
+                        ${isAdmin ? `<button class="btn-delete" onclick="deleteTeam(${item.id})">🗑️</button>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderPodium(rankedTeams) {
+            const podiumContainer = document.getElementById('podiumContainer');
+            podiumContainer.innerHTML = '';
+
+            const top3 = [
+                { pos: 1, class: 'gold', medal: '🥇', label: '1er Lugar' },
+                { pos: 2, class: 'silver', medal: '🥈', label: '2do Lugar' },
+                { pos: 3, class: 'bronze', medal: '🥉', label: '3er Lugar' }
+            ];
+
+            top3.forEach(p => {
+                const team = rankedTeams.find(t => t.pos === p.pos);
+                const card = document.createElement('div');
+                card.className = `podium-card ${p.class}`;
+
+                if (team) {
+                    card.innerHTML = `
+                        <div class="podium-title">${p.label} <span>${p.medal}</span></div>
+                        <div class="podium-avatar">🚀</div>
+                        <div class="podium-team">${escapeHtml(team.team)}</div>
+                        <div class="podium-rocket">Cohete: ${escapeHtml(team.rocket)}</div>
+                        <div class="podium-error">${team.errorPct}% Error</div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="podium-title">${p.label} <span>${p.medal}</span></div>
+                        <div class="podium-avatar">🚀</div>
+                        <div class="podium-team">-</div>
+                        <div class="podium-rocket">Sin registro</div>
+                        <div class="podium-error">--</div>
+                    `;
+                }
+                podiumContainer.appendChild(card);
+            });
+        }
+
+        function addTeam(e) {
+            e.preventDefault();
+            const newTeam = {
+                id: Date.now(),
+                group: document.getElementById('groupName').value,
+                team: document.getElementById('teamName').value,
+                rocket: document.getElementById('rocketName').value,
+                theoreticalHeight: parseFloat(document.getElementById('theoreticalHeight').value),
+                sensorHeight: parseFloat(document.getElementById('sensorHeight').value)
+            };
+
+            teams.push(newTeam);
+            saveAndRender();
+            document.getElementById('rocketForm').reset();
+        }
+
+        function deleteTeam(id) {
+            if (confirm("¿Estás seguro de eliminar este registro?")) {
+                teams = teams.filter(t => t.id !== id);
+                saveAndRender();
+            }
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('rocket_teams', JSON.stringify(teams));
+            renderLeaderboard();
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        window.onload = renderLeaderboard;
+    </script>
+</body>
+</html>
