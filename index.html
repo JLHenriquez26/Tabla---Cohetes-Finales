@@ -28,10 +28,13 @@
 
         body {
             background-color: var(--bg-dark);
+            /* Fondo con imagen local en assets y respaldo en degradado espacial */
             background-image: 
-                radial-gradient(circle at 50% 20%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 80% 60%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
+                linear-gradient(rgba(4, 8, 20, 0.7), rgba(4, 8, 20, 0.85)), 
+                url('assets/img/bg-space.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
@@ -53,40 +56,18 @@
         }
 
         .logo-container {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Emblema espacial inspirado en la interfaz */
-        .space-badge {
-            width: 90px;
-            height: 90px;
-            background: radial-gradient(circle, #0f172a 0%, #030712 100%);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), inset 0 0 15px rgba(56, 189, 248, 0.2);
-            position: relative;
-        }
-
-        .space-badge .icon {
-            font-size: 2rem;
-            line-height: 1;
-        }
-
-        .space-badge .badge-text {
-            font-size: 0.55rem;
-            font-weight: 800;
-            color: var(--neon-cyan);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            text-align: center;
-            margin-top: 4px;
+        /* Estilo para el logo oficial cargado desde assets */
+        .logo-container img {
+            max-height: 80px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.3));
         }
 
         .title {
@@ -452,11 +433,9 @@
         <header>
             <button class="admin-toggle-btn" onclick="toggleAdminMode()" id="adminBtn" title="Admin"></button>
             
+            <!-- Logo apuntando a la carpeta de recursos local assets/img/ -->
             <div class="logo-container">
-                <div class="space-badge">
-                    <span class="icon">🚀</span>
-                    <span class="badge-text">Tec de Monterrey</span>
-                </div>
+                <img src="assets/img/logo-tec.png" alt="Tecnológico de Monterrey">
             </div>
 
             <h1 class="title">🚀 COMPETENCIA DE COHETES FINALES 🚀</h1>
@@ -465,9 +444,7 @@
         </header>
 
         <!-- Podio de Honor Top 3 -->
-        <div class="podium-container" id="podiumContainer">
-            <!-- Renderizado dinámicamente -->
-        </div>
+        <div class="podium-container" id="podiumContainer"></div>
 
         <!-- Panel de Administración -->
         <div class="admin-panel" id="adminPanel">
@@ -588,7 +565,6 @@
                 };
             });
 
-            // Actualizar Podio Top 3
             renderPodium(rankedTeams);
 
             const filteredTeams = rankedTeams.filter(item => 
