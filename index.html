@@ -130,8 +130,8 @@
             color: var(--text-main);
             font-size: 1rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            text-transform: none; /* Quitamos uppercase para que respete las minúsculas exactas */
+            letter-spacing: 1px;
             margin-bottom: 0.75rem;
         }
 
@@ -169,7 +169,7 @@
         }
 
         .countdown-footer {
-            color: var(--neon-cyan);
+            color: var(--text-main);
             font-size: 0.95rem;
             font-weight: 600;
             letter-spacing: 1px;
@@ -390,7 +390,7 @@
             <h1 class="title">🚀 Competencia de Cohetes Finales 🚀</h1>
             <p class="subtitle">Unidad de Formación F1025B</p>
             
-            <!-- Cronómetro T-Minus con encabezado y pie -->
+            <!-- Cronómetro T-Minus con Faltan y pie en blanco -->
             <div class="countdown-section">
                 <div class="countdown-title">Faltan:</div>
                 <div class="countdown-container">
@@ -411,7 +411,7 @@
                         <div class="countdown-label">Segundos</div>
                     </div>
                 </div>
-                <div class="countdown-footer">para la semana de la Competencia Final</div>
+                <div class="countdown-footer">para la semana de la competencia final</div>
             </div>
 
             <p class="sub-header">Tabla de Posiciones</p>
