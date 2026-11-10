@@ -111,13 +111,6 @@
             text-transform: uppercase;
         }
 
-        .sub-header {
-            color: var(--neon-cyan);
-            font-size: 0.95rem;
-            margin-top: 0.2rem;
-            font-weight: 600;
-        }
-
         /* Estilos del Cronómetro T-Minus */
         .countdown-section {
             margin: 1.5rem 0;
@@ -130,7 +123,6 @@
             color: var(--text-main);
             font-size: 1rem;
             font-weight: 700;
-            text-transform: none; /* Quitamos uppercase para que respete las minúsculas exactas */
             letter-spacing: 1px;
             margin-bottom: 0.75rem;
         }
@@ -173,6 +165,60 @@
             font-size: 0.95rem;
             font-weight: 600;
             letter-spacing: 1px;
+        }
+
+        /* Apartado de Parches de Misión */
+        .patches-section {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-cyan);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
+            padding: 1.5rem;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .patches-title {
+            color: var(--neon-cyan);
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.2rem;
+        }
+
+        .patches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .patch-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px dashed var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: rgba(15, 23, 42, 0.5);
+            margin: 0 auto;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .patch-item:hover {
+            border-color: var(--neon-cyan);
+            transform: scale(1.05);
+        }
+
+        .patch-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* Panel Admin oculto por defecto */
@@ -390,7 +436,7 @@
             <h1 class="title">🚀 Competencia de Cohetes Finales 🚀</h1>
             <p class="subtitle">Unidad de Formación F1025B</p>
             
-            <!-- Cronómetro T-Minus con Faltan y pie en blanco -->
+            <!-- Cronómetro T-Minus -->
             <div class="countdown-section">
                 <div class="countdown-title">Faltan:</div>
                 <div class="countdown-container">
@@ -413,9 +459,31 @@
                 </div>
                 <div class="countdown-footer">para la semana de la competencia final</div>
             </div>
-
-            <p class="sub-header">Tabla de Posiciones</p>
         </header>
+
+        <!-- Apartado para los 16 Parches de Misión de los Equipos -->
+        <div class="patches-section">
+            <div class="patches-title">🎖️ Parches de Misión de los Equipos 🎖️</div>
+            <div class="patches-grid">
+                <!-- Parche 1 al 16 (Puedes cambiar el src="" cuando tengas tus imágenes) -->
+                <div class="patch-item"><img src="assets/img/patch-1.png" alt="Parche 1"></div>
+                <div class="patch-item"><img src="assets/img/patch-2.png" alt="Parche 2"></div>
+                <div class="patch-item"><img src="assets/img/patch-3.png" alt="Parche 3"></div>
+                <div class="patch-item"><img src="assets/img/patch-4.png" alt="Parche 4"></div>
+                <div class="patch-item"><img src="assets/img/patch-5.png" alt="Parche 5"></div>
+                <div class="patch-item"><img src="assets/img/patch-6.png" alt="Parche 6"></div>
+                <div class="patch-item"><img src="assets/img/patch-7.png" alt="Parche 7"></div>
+                <div class="patch-item"><img src="assets/img/patch-8.png" alt="Parche 8"></div>
+                <div class="patch-item"><img src="assets/img/patch-9.png" alt="Parche 9"></div>
+                <div class="patch-item"><img src="assets/img/patch-10.png" alt="Parche 10"></div>
+                <div class="patch-item"><img src="assets/img/patch-11.png" alt="Parche 11"></div>
+                <div class="patch-item"><img src="assets/img/patch-12.png" alt="Parche 12"></div>
+                <div class="patch-item"><img src="assets/img/patch-13.png" alt="Parche 13"></div>
+                <div class="patch-item"><img src="assets/img/patch-14.png" alt="Parche 14"></div>
+                <div class="patch-item"><img src="assets/img/patch-15.png" alt="Parche 15"></div>
+                <div class="patch-item"><img src="assets/img/patch-16.png" alt="Parche 16"></div>
+            </div>
+        </div>
 
         <!-- Panel de Administración / Registro Oculto -->
         <div class="admin-panel" id="adminPanel">
