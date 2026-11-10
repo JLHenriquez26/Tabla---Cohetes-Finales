@@ -119,11 +119,27 @@
         }
 
         /* Estilos del Cronómetro T-Minus */
+        .countdown-section {
+            margin: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-title {
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.75rem;
+        }
+
         .countdown-container {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin: 1.5rem 0;
+            margin-bottom: 0.75rem;
         }
 
         .countdown-box {
@@ -150,6 +166,13 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 0.2rem;
+        }
+
+        .countdown-footer {
+            color: var(--neon-cyan);
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
 
         /* Panel Admin oculto por defecto */
@@ -367,24 +390,28 @@
             <h1 class="title">🚀 Competencia de Cohetes Finales 🚀</h1>
             <p class="subtitle">Unidad de Formación F1025B</p>
             
-            <!-- Cronómetro T-Minus -->
-            <div class="countdown-container">
-                <div class="countdown-box">
-                    <div id="days" class="countdown-number">00</div>
-                    <div class="countdown-label">Días</div>
+            <!-- Cronómetro T-Minus con encabezado y pie -->
+            <div class="countdown-section">
+                <div class="countdown-title">Faltan:</div>
+                <div class="countdown-container">
+                    <div class="countdown-box">
+                        <div id="days" class="countdown-number">00</div>
+                        <div class="countdown-label">Días</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div id="hours" class="countdown-number">00</div>
+                        <div class="countdown-label">Horas</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div id="minutes" class="countdown-number">00</div>
+                        <div class="countdown-label">Minutos</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div id="seconds" class="countdown-number">00</div>
+                        <div class="countdown-label">Segundos</div>
+                    </div>
                 </div>
-                <div class="countdown-box">
-                    <div id="hours" class="countdown-number">00</div>
-                    <div class="countdown-label">Horas</div>
-                </div>
-                <div class="countdown-box">
-                    <div id="minutes" class="countdown-number">00</div>
-                    <div class="countdown-label">Minutos</div>
-                </div>
-                <div class="countdown-box">
-                    <div id="seconds" class="countdown-number">00</div>
-                    <div class="countdown-label">Segundos</div>
-                </div>
+                <div class="countdown-footer">para la semana de la Competencia Final</div>
             </div>
 
             <p class="sub-header">Tabla de Posiciones</p>
