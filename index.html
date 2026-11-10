@@ -322,7 +322,7 @@
 
     <div class="container">
         <header>
-            <!-- Botón invisible en la esquina superior derecha -->
+            <!-- Botón invisible de administrador en la esquina superior derecha -->
             <button class="admin-toggle-btn" onclick="toggleAdminMode()" title="Administrador"></button>
             
             <div class="logos-wrapper">
@@ -397,7 +397,7 @@
 
     <script>
         // PEGA AQUÍ LA URL DE TU APLICACIÓN WEB DE GOOGLE APPS SCRIPT
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyFa_6BvnRgEbTPWFfWPF47BriNRX5rA8BP6kd5OVgCAuiT2zhLHgTPgGp0jaZJDLZ3/exec";
+        const WEB_APP_URL = "PEGAR_TU_URL_DE_APPS_SCRIPT_AQUI";
 
         const music = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
@@ -489,7 +489,7 @@
                 return { ...item, error };
             }).sort((a, b) => a.error - b.error);
 
-            // Asignar posiciones considerando empates opcionales
+            // Asignar posiciones dinámicas (con manejo de empates si aplica)
             let currentPos = 1;
             const rankedTeams = processedTeams.map((item, index) => {
                 if (index > 0 && item.error !== processedTeams[index - 1].error) {
