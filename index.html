@@ -118,6 +118,40 @@
             font-weight: 600;
         }
 
+        /* Estilos del Cronómetro T-Minus */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .countdown-box {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            min-width: 75px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+
+        .countdown-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--neon-cyan);
+            font-family: monospace;
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+        }
+
+        .countdown-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.2rem;
+        }
+
         /* Panel Admin oculto por defecto */
         .admin-panel {
             display: none;
@@ -332,6 +366,27 @@
 
             <h1 class="title">🚀 Competencia de Cohetes Finales 🚀</h1>
             <p class="subtitle">Unidad de Formación F1025B</p>
+            
+            <!-- Cronómetro T-Minus -->
+            <div class="countdown-container">
+                <div class="countdown-box">
+                    <div id="days" class="countdown-number">00</div>
+                    <div class="countdown-label">Días</div>
+                </div>
+                <div class="countdown-box">
+                    <div id="hours" class="countdown-number">00</div>
+                    <div class="countdown-label">Horas</div>
+                </div>
+                <div class="countdown-box">
+                    <div id="minutes" class="countdown-number">00</div>
+                    <div class="countdown-label">Minutos</div>
+                </div>
+                <div class="countdown-box">
+                    <div id="seconds" class="countdown-number">00</div>
+                    <div class="countdown-label">Segundos</div>
+                </div>
+            </div>
+
             <p class="sub-header">Tabla de Posiciones</p>
         </header>
 
@@ -397,7 +452,7 @@
 
     <script>
         // PEGA AQUÍ LA URL DE TU APLICACIÓN WEB DE GOOGLE APPS SCRIPT
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyFa_6BvnRgEbTPWFfWPF47BriNRX5rA8BP6kd5OVgCAuiT2zhLHgTPgGp0jaZJDLZ3/exec";
+        const WEB_APP_URL = "PEGAR_TU_URL_DE_APPS_SCRIPT_AQUI";
 
         const music = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
@@ -419,8 +474,40 @@
             });
 
             fetchTeams();
-            setInterval(fetchTeams, 10000); // Actualiza cada 10 segundos automáticamente
+            setInterval(fetchTeams, 10000); // Actualiza la tabla cada 10 segundos
+            startCountdown(); // Inicia el cronómetro T-Minus
         });
+
+        // Lógica del Cronómetro T-Minus para el 30 de Noviembre
+        function startCountdown() {
+            const updateTimer = () => {
+                const now = new Date();
+                let year = now.getFullYear();
+                
+                // Configurar objetivo: 30 de noviembre del año en curso a las 23:59:59
+                let targetDate = new Date(year, 10, 30, 23, 59, 59); // Mes 10 es Noviembre (0-indexed)
+
+                // Si ya pasó el 30 de noviembre de este año, apuntar al siguiente año
+                if (now > targetDate) {
+                    targetDate = new Date(year + 1, 10, 30, 23, 59, 59);
+                }
+
+                const diff = targetDate - now;
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            };
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
 
         function toggleMusic() {
             if (isPlaying) {
@@ -489,7 +576,7 @@
                 return { ...item, error };
             }).sort((a, b) => a.error - b.error);
 
-            // Asignar posiciones dinámicas (con manejo de empates si aplica)
+            // Asignar posiciones dinámicas
             let currentPos = 1;
             const rankedTeams = processedTeams.map((item, index) => {
                 if (index > 0 && item.error !== processedTeams[index - 1].error) {
