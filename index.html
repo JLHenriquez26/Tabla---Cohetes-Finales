@@ -260,6 +260,13 @@
             font-style: italic;
         }
 
+        .sync-status {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            text-align: right;
+        }
+
         .music-toggle {
             position: fixed;
             bottom: 20px;
@@ -336,16 +343,17 @@
                         <input type="number" step="0.01" id="sensorHeight" required placeholder="Ej: 145.2">
                     </div>
                 </div>
-                <button type="submit" class="btn-submit" id="submitBtn">Guardar Registro</button>
-                <div id="successMsg" class="success-msg">¡Registro guardado correctamente en el sistema!</div>
+                <button type="submit" class="btn-submit" id="submitBtn">Guardar Registro en la Nube</button>
+                <div id="successMsg" class="success-msg">¡Registro guardado correctamente en Google Sheets!</div>
             </form>
         </div>
 
         <!-- Tabla de Posiciones -->
         <div class="table-container">
-            <div class="admin-panel-header" style="margin-bottom: 1rem;">
+            <div class="admin-panel-header" style="margin-bottom: 0.5rem;">
                 <span class="admin-title">🏆 Tabla de Clasificación</span>
             </div>
+            <div class="sync-status" id="syncStatus">🔄 Sincronizando con Google Sheets...</div>
             
             <table class="leaderboard-table">
                 <thead>
@@ -359,20 +367,24 @@
                     </tr>
                 </thead>
                 <tbody id="leaderboardBody">
-                    <!-- Los datos se generan dinámicamente -->
+                    <tr><td colspan="6" class="empty-msg">Cargando registros...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
+        // PEGA AQUÍ LA URL DE TU APLICACIÓN WEB DE GOOGLE APPS SCRIPT
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyFa_6BvnRgEbTPWFfWPF47BriNRX5rA8BP6kd5OVgCAuiT2zhLHgTPgGp0jaZJDLZ3/exec";
+
         const music = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
         let isPlaying = false;
         
-        // Contraseña encriptada en Base64 ("RocketadminSpace" por defecto, puedes cambiarla)
+        // Contraseña encriptada en Base64 ("RocketadminSpace" por defecto)
         const ADMIN_PASS_ENCODED = "Um9ja2V0YWRtaW5TcGFjZQ==";
         let isAdmin = false;
+        let teams = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             music.volume = 0.4;
@@ -384,7 +396,8 @@
                 musicBtn.innerHTML = "🔇 <span>Reproducir Música</span>";
             });
 
-            renderLeaderboard();
+            fetchTeams();
+            setInterval(fetchTeams, 10000); // Actualiza cada 10 segundos automáticamente
         });
 
         function toggleMusic() {
@@ -418,11 +431,30 @@
             }
         }
 
+        async function fetchTeams() {
+            if (WEB_APP_URL.includes("PEGAR_TU_URL")) {
+                document.getElementById('syncStatus').innerText = "⚠️ Falta configurar la URL de Google Sheets";
+                document.getElementById('leaderboardBody').innerHTML = `<tr><td colspan="6" class="empty-msg">Configura la variable WEB_APP_URL en el código.</td></tr>`;
+                return;
+            }
+
+            try {
+                const response = await fetch(WEB_APP_URL);
+                teams = await response.json();
+                renderLeaderboard();
+                
+                const now = new Date();
+                document.getElementById('syncStatus').innerText = `🟢 Sincronizado a las ${now.toLocaleTimeString()}`;
+            } catch (error) {
+                console.error("Error al obtener datos:", error);
+                document.getElementById('syncStatus').innerText = "⚠️ Error al conectar con Google Sheets";
+            }
+        }
+
         function renderLeaderboard() {
-            let teams = JSON.parse(localStorage.getItem('rocket_teams_finales')) || [];
             const tbody = document.getElementById('leaderboardBody');
 
-            if (teams.length === 0) {
+            if (!teams || teams.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="empty-msg">No hay lanzamientos registrados aún.</td></tr>`;
                 return;
             }
@@ -447,12 +479,13 @@
             `).join('');
         }
 
-        function addTeam(e) {
+        async function addTeam(e) {
             e.preventDefault();
-            let teams = JSON.parse(localStorage.getItem('rocket_teams_finales')) || [];
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "Guardando en Google Sheets...";
+            submitBtn.disabled = true;
 
             const newTeam = {
-                id: Date.now(),
                 group: document.getElementById('groupName').value,
                 team: document.getElementById('teamName').value,
                 rocket: document.getElementById('rocketName').value,
@@ -460,17 +493,30 @@
                 sensorHeight: parseFloat(document.getElementById('sensorHeight').value)
             };
 
-            teams.push(newTeam);
-            localStorage.setItem('rocket_teams_finales', JSON.stringify(teams));
-            document.getElementById('rocketForm').reset();
-            
-            const msg = document.getElementById('successMsg');
-            msg.style.display = 'block';
-            setTimeout(() => { 
-                msg.style.display = 'none'; 
-                toggleAdminMode(); // Cierra el panel automáticamente al registrar
-                renderLeaderboard();
-            }, 1500);
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(newTeam)
+                });
+
+                document.getElementById('rocketForm').reset();
+                const msg = document.getElementById('successMsg');
+                msg.style.display = 'block';
+
+                setTimeout(() => { 
+                    msg.style.display = 'none'; 
+                    toggleAdminMode(); 
+                    fetchTeams(); // Recarga los datos actualizados de la nube
+                }, 1500);
+            } catch (error) {
+                alert("Error al guardar el registro en la nube.");
+                console.error(error);
+            } finally {
+                submitBtn.innerText = "Guardar Registro en la Nube";
+                submitBtn.disabled = false;
+            }
         }
     </script>
 </body>
