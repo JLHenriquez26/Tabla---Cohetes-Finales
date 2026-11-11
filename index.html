@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Competencia de Cohetes Finales - Tabla de Posiciones</title>
+    <title>Competencia de Cohetes Finales - Tablas de Posiciones</title>
     <style>
         :root {
             --bg-dark: #040814;
@@ -51,7 +51,6 @@
         header {
             text-align: center;
             margin-bottom: 2rem;
-            position: relative;
         }
 
         .logos-wrapper {
@@ -96,7 +95,7 @@
             text-transform: uppercase;
         }
 
-        /* Estilos del Cronómetro T-Minus */
+        /* Cronómetro T-Minus */
         .countdown-section {
             margin: 1.5rem 0;
             display: flex;
@@ -152,7 +151,7 @@
             letter-spacing: 1px;
         }
 
-        /* Apartado de Parches de Misión */
+        /* Parches de Misión */
         .patches-section {
             background: var(--card-bg);
             border: 1px solid var(--neon-cyan);
@@ -192,12 +191,6 @@
             overflow: hidden;
             background: rgba(15, 23, 42, 0.5);
             margin: 0 auto;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .patch-item:hover {
-            border-color: var(--neon-cyan);
-            transform: scale(1.05);
         }
 
         .patch-item img {
@@ -206,6 +199,7 @@
             object-fit: cover;
         }
 
+        /* Contenedores de Tablas */
         .table-container {
             background: var(--card-bg);
             border: 1px solid var(--neon-cyan);
@@ -214,13 +208,11 @@
             padding: 1.5rem;
             box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
             overflow-x: auto;
+            margin-bottom: 2rem;
         }
 
         .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .table-title {
@@ -281,6 +273,11 @@
             font-weight: bold;
         }
 
+        .height-tag {
+            color: var(--neon-cyan);
+            font-weight: bold;
+        }
+
         .empty-msg {
             text-align: center;
             color: var(--text-muted);
@@ -320,7 +317,6 @@
 </head>
 <body>
 
-    <!-- Reproductor de música en bucle -->
     <audio id="bgMusic" src="assets/audio/space-music.mp3" loop preload="auto"></audio>
 
     <button class="music-toggle" onclick="toggleMusic()" id="musicBtn">
@@ -337,32 +333,18 @@
             <h1 class="title">🚀 Competencia de Cohetes Finales 🚀</h1>
             <p class="subtitle">Unidad de Formación F1025B</p>
             
-            <!-- Cronómetro T-Minus -->
             <div class="countdown-section">
                 <div class="countdown-title">Faltan:</div>
                 <div class="countdown-container">
-                    <div class="countdown-box">
-                        <div id="days" class="countdown-number">00</div>
-                        <div class="countdown-label">Días</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div id="hours" class="countdown-number">00</div>
-                        <div class="countdown-label">Horas</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div id="minutes" class="countdown-number">00</div>
-                        <div class="countdown-label">Minutos</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div id="seconds" class="countdown-number">00</div>
-                        <div class="countdown-label">Segundos</div>
-                    </div>
+                    <div class="countdown-box"><div id="days" class="countdown-number">00</div><div class="countdown-label">Días</div></div>
+                    <div class="countdown-box"><div id="hours" class="countdown-number">00</div><div class="countdown-label">Horas</div></div>
+                    <div class="countdown-box"><div id="minutes" class="countdown-number">00</div><div class="countdown-label">Minutos</div></div>
+                    <div class="countdown-box"><div id="seconds" class="countdown-number">00</div><div class="countdown-label">Segundos</div></div>
                 </div>
                 <div class="countdown-footer">para la semana de la competencia final</div>
             </div>
         </header>
 
-        <!-- Apartado para los 16 Parches de Misión de los Equipos -->
         <div class="patches-section">
             <div class="patches-title">🎖️ Parches de Misión de los Equipos 🎖️</div>
             <div class="patches-grid">
@@ -385,13 +367,13 @@
             </div>
         </div>
 
-        <!-- Tabla de Posiciones -->
+        <div class="sync-status" id="syncStatus">🔄 Sincronizando con Google Sheets...</div>
+
+        <!-- SECCIÓN 1: Menor Porcentaje de Error (Precisión) -->
         <div class="table-container">
             <div class="table-header">
-                <span class="table-title">🏆 Tabla de Clasificación</span>
+                <span class="table-title">🎯 Categoría 1: Menor % de Error (Precisión)</span>
             </div>
-            <div class="sync-status" id="syncStatus">🔄 Sincronizando con Google Sheets...</div>
-            
             <table class="leaderboard-table">
                 <thead>
                     <tr>
@@ -401,18 +383,39 @@
                         <th>Cohete</th>
                         <th>Altura Teórica</th>
                         <th>Altura Sensor</th>
-                        <th>Porcentaje Error</th>
+                        <th>% Error</th>
                     </tr>
                 </thead>
-                <tbody id="leaderboardBody">
+                <tbody id="errorLeaderboardBody">
                     <tr><td colspan="7" class="empty-msg">Cargando registros...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECCIÓN 2: Mayor Altura Máxima (Rendimiento) -->
+        <div class="table-container">
+            <div class="table-header">
+                <span class="table-title">🚀 Categoría 2: Mayor Altura Máxima (Rendimiento)</span>
+            </div>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; width: 70px;">Pos</th>
+                        <th>Grupo</th>
+                        <th>Equipo</th>
+                        <th>Cohete</th>
+                        <th>Altura Máxima</th>
+                    </tr>
+                </thead>
+                <tbody id="heightLeaderboardBody">
+                    <tr><td colspan="5" class="empty-msg">Cargando registros...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLdGjD-DtGZLs5KQ8LYDUxO_d7VdeddQBU1quXkvCNVQyqgZ3EbvZFYOED8c1ukbB_/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby9aLqgw9PcukSJEP8Pg3nvE_mQWnkRw4aNVKXoq0kND-DAZ4hcEQ1euCq00keAn9dY/exec";
 
         const music = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
@@ -430,7 +433,7 @@
             });
 
             fetchTeams();
-            setInterval(fetchTeams, 10000); // Actualiza la tabla cada 10 segundos
+            setInterval(fetchTeams, 10000);
             startCountdown();
         });
 
@@ -439,13 +442,9 @@
                 const now = new Date();
                 let year = now.getFullYear();
                 let targetDate = new Date(year, 10, 30, 23, 59, 59);
-
-                if (now > targetDate) {
-                    targetDate = new Date(year + 1, 10, 30, 23, 59, 59);
-                }
+                if (now > targetDate) targetDate = new Date(year + 1, 10, 30, 23, 59, 59);
 
                 const diff = targetDate - now;
-
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -456,7 +455,6 @@
                 document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
                 document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
             };
-
             updateTimer();
             setInterval(updateTimer, 1000);
         }
@@ -474,16 +472,10 @@
         }
 
         async function fetchTeams() {
-            if (WEB_APP_URL.includes("PEGAR_TU_URL")) {
-                document.getElementById('syncStatus').innerText = "⚠️ Falta configurar la URL de Google Sheets";
-                document.getElementById('leaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">Configura la variable WEB_APP_URL en el código.</td></tr>`;
-                return;
-            }
-
             try {
                 const response = await fetch(WEB_APP_URL);
                 teams = await response.json();
-                renderLeaderboard();
+                renderLeaderboards();
                 
                 const now = new Date();
                 document.getElementById('syncStatus').innerText = `🟢 Sincronizado a las ${now.toLocaleTimeString()}`;
@@ -493,45 +485,69 @@
             }
         }
 
-        function renderLeaderboard() {
-            const tbody = document.getElementById('leaderboardBody');
-
+        function renderLeaderboards() {
             if (!teams || teams.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="empty-msg">No hay lanzamientos registrados aún.</td></tr>`;
+                document.getElementById('errorLeaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">No hay registros aún.</td></tr>`;
+                document.getElementById('heightLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
                 return;
             }
 
-            const processedTeams = teams.map(item => {
+            const processed = teams.map(item => {
                 const theo = parseFloat(item.theoreticalHeight) || 0;
                 const sens = parseFloat(item.sensorHeight) || 0;
+                const maxH = parseFloat(item.maxHeight) || 0;
                 const error = theo > 0 ? Math.abs((theo - sens) / theo) * 100 : 0;
-                return { ...item, error };
-            }).sort((a, b) => a.error - b.error);
-
-            let currentPos = 1;
-            const rankedTeams = processedTeams.map((item, index) => {
-                if (index > 0 && item.error !== processedTeams[index - 1].error) {
-                    currentPos = index + 1;
-                }
-                return { ...item, pos: currentPos };
+                return { ...item, error, maxH };
             });
 
-            tbody.innerHTML = rankedTeams.map(item => {
-                const pos = item.pos;
-                let badgeHtml = `<span class="pos-badge">${pos}</span>`;
-                if (pos === 1) badgeHtml = `<span class="pos-badge pos-1">🥇 1</span>`;
-                else if (pos === 2) badgeHtml = `<span class="pos-badge pos-2">🥈 2</span>`;
-                else if (pos === 3) badgeHtml = `<span class="pos-badge pos-3">🥉 3</span>`;
+            // TABLA 1: Ordenada por menor % de error
+            const errorSorted = [...processed].sort((a, b) => a.error - b.error);
+            let posError = 1;
+            const rankedError = errorSorted.map((item, index) => {
+                if (index > 0 && item.error !== errorSorted[index - 1].error) posError = index + 1;
+                return { ...item, pos: posError };
+            });
+
+            document.getElementById('errorLeaderboardBody').innerHTML = rankedError.map(item => {
+                let badge = `<span class="pos-badge">${item.pos}</span>`;
+                if (item.pos === 1) badge = `<span class="pos-badge pos-1">🥇 1</span>`;
+                else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
+                else if (item.pos === 3) badge = `<span class="pos-badge pos-3">🥉 3</span>`;
 
                 return `
                     <tr>
-                        <td style="text-align: center;">${badgeHtml}</td>
+                        <td style="text-align: center;">${badge}</td>
                         <td>${item.group || '-'}</td>
                         <td>${item.team || '-'}</td>
                         <td>${item.rocket || '-'}</td>
                         <td>${item.theoreticalHeight} m</td>
                         <td>${item.sensorHeight} m</td>
                         <td class="error-tag">${item.error.toFixed(2)}%</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // TABLA 2: Ordenada por mayor altura máxima
+            const heightSorted = [...processed].sort((a, b) => b.maxH - a.maxH);
+            let posHeight = 1;
+            const rankedHeight = heightSorted.map((item, index) => {
+                if (index > 0 && item.maxH !== heightSorted[index - 1].maxH) posHeight = index + 1;
+                return { ...item, pos: posHeight };
+            });
+
+            document.getElementById('heightLeaderboardBody').innerHTML = rankedHeight.map(item => {
+                let badge = `<span class="pos-badge">${item.pos}</span>`;
+                if (item.pos === 1) badge = `<span class="pos-badge pos-1">🥇 1</span>`;
+                else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
+                else if (item.pos === 3) badge = `<span class="pos-badge pos-3">🥉 3</span>`;
+
+                return `
+                    <tr>
+                        <td style="text-align: center;">${badge}</td>
+                        <td>${item.group || '-'}</td>
+                        <td>${item.team || '-'}</td>
+                        <td>${item.rocket || '-'}</td>
+                        <td class="height-tag">${item.maxH} m</td>
                     </tr>
                 `;
             }).join('');
