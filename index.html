@@ -374,7 +374,7 @@
 
         <div class="sync-status" id="syncStatus">🔄 Sincronizando con Google Sheets...</div>
 
-        <!-- TABLA 1: Categoría 1: ALTURA MÁXIMA (Primero) -->
+        <!-- TABLA 1: Categoría 1: ALTURA MÁXIMA -->
         <div class="table-container">
             <div class="table-header">
                 <span class="table-title">🚀 Categoría 1: Altura Máxima</span>
@@ -395,7 +395,7 @@
             </table>
         </div>
 
-        <!-- TABLA 2: Categoría 2: Menor Error Absoluto (Segundo) -->
+        <!-- TABLA 2: Categoría 2: Menor Error Absoluto -->
         <div class="table-container">
             <div class="table-header">
                 <span class="table-title">🎯 Categoría 2: Menor Error Absoluto</span>
@@ -418,7 +418,7 @@
             </table>
         </div>
 
-        <!-- TABLA 3: Categoría 3: Tiro Parabólico (Tercero) -->
+        <!-- TABLA 3: Categoría 3: Tiro Parabólico -->
         <div class="table-container">
             <div class="table-header">
                 <span class="table-title">🎯 Categoría 3: Tiro Parabólico</span>
@@ -441,7 +441,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby9aLqgw9PcukSJEP8Pg3nvE_mQWnkRw4aNVKXoq0kND-DAZ4hcEQ1euCq00keAn9dY/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx_X3nbJ-8p6ryaX8C4Vc9Xx6NCkWjpss-tH1pADbjAFYxgEeQ1lqZ8ffsWhMNj-WNd/exec";
 
         const music = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
@@ -522,13 +522,13 @@
             const processed = teams.map(item => {
                 const theo = parseFloat(item.theoreticalHeight) || 0;
                 const sens = parseFloat(item.sensorHeight) || 0;
-                const maxH = parseFloat(item.maxHeight) || 0;
-                const impactScore = parseFloat(item.impactScore) || 0;
+                const maxH = parseFloat(item.maximumHeight) || 0;
+                const score = parseFloat(item.parabolicScore) || 0;
                 const error = theo > 0 ? Math.abs((theo - sens) / theo) * 100 : 0;
-                return { ...item, error, maxH, impactScore };
+                return { ...item, error, maxH, score };
             });
 
-            // TABLA 1: Categoría 1: ALTURA MÁXIMA (Ordenada de mayor a menor altura)
+            // TABLA 1: Categoría 1: ALTURA MÁXIMA (Mayor a menor)
             const heightSorted = [...processed].sort((a, b) => b.maxH - a.maxH);
             let posHeight = 1;
             const rankedHeight = heightSorted.map((item, index) => {
@@ -553,7 +553,7 @@
                 `;
             }).join('');
 
-            // TABLA 2: Categoría 2: Menor Error Absoluto (Ordenada de menor a mayor error)
+            // TABLA 2: Categoría 2: Menor Error Absoluto (Menor a mayor)
             const errorSorted = [...processed].sort((a, b) => a.error - b.error);
             let posError = 1;
             const rankedError = errorSorted.map((item, index) => {
@@ -580,11 +580,11 @@
                 `;
             }).join('');
 
-            // TABLA 3: Categoría 3: Tiro Parabólico (Ordenada por mayor puntaje de impacto)
-            const parabolicSorted = [...processed].sort((a, b) => b.impactScore - a.impactScore);
+            // TABLA 3: Categoría 3: Tiro Parabólico (Mayor a menor puntaje de impacto)
+            const parabolicSorted = [...processed].sort((a, b) => b.score - a.score);
             let posParabolic = 1;
             const rankedParabolic = parabolicSorted.map((item, index) => {
-                if (index > 0 && item.impactScore !== parabolicSorted[index - 1].impactScore) posParabolic = index + 1;
+                if (index > 0 && item.score !== parabolicSorted[index - 1].score) posParabolic = index + 1;
                 return { ...item, pos: posParabolic };
             });
 
@@ -600,7 +600,7 @@
                         <td>${item.group || '-'}</td>
                         <td>${item.team || '-'}</td>
                         <td>${item.rocket || '-'}</td>
-                        <td class="score-tag">${item.impactScore} pts</td>
+                        <td class="score-tag">${item.score} pts</td>
                     </tr>
                 `;
             }).join('');
