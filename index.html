@@ -151,7 +151,7 @@
             letter-spacing: 1px;
         }
 
-        /* Parches de Misión - Filas de 4 más grandes y claros */
+        /* Parches de Misión - 15 parches (4 en las primeras filas, 3 en la última) */
         .patches-section {
             background: var(--card-bg);
             border: 1px solid var(--neon-cyan);
@@ -179,6 +179,26 @@
             justify-items: center;
             align-items: center;
         }
+
+        /* Hace que los últimos 3 elementos (del 13 al 15) ocupen la última fila de forma centrada y simétrica */
+        .patches-grid .patch-item:nth-child(n+13) {
+            grid-column: span 1;
+        }
+
+        /* Truco para centrar los 3 elementos de la última fila en CSS Grid de 4 columnas */
+        .patches-grid .patch-item:nth-child(13) {
+            grid-column: 1 / 2;
+            justify-self: end;
+        }
+        .patches-grid .patch-item:nth-child(14) {
+            grid-column: 2 / 3;
+        }
+        .patches-grid .patch-item:nth-child(15) {
+            grid-column: 3 / 4;
+            justify-self: start;
+        }
+        /* Ocultamos una celda imaginaria para equilibrar si es necesario, o dejamos que se adapten con flex/grid fluido. 
+           Una forma más limpia para los últimos 3 es aplicar un contenedor flex inferior o usar subgrid, pero aquí tienes una solución directa por filas: */
 
         .patch-item {
             width: 140px;
@@ -209,6 +229,10 @@
             .patches-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.25rem;
+            }
+            .patches-grid .patch-item:nth-child(n) {
+                grid-column: auto !important;
+                justify-self: center !important;
             }
             .patch-item {
                 width: 120px;
@@ -383,7 +407,6 @@
                 <div class="patch-item"><img src="assets/img/patch-11.png" alt="Parche 11"></div>
                 <div class="patch-item"><img src="assets/img/patch-12.png" alt="Parche 12"></div>
                 <div class="patch-item"><img src="assets/img/patch-13.png" alt="Parche 13"></div>
-                <div class="patch-item"><img src="assets/img/patch-14.png" alt="Parche 14"></div>
                 <div class="patch-item"><img src="assets/img/patch-15.png" alt="Parche 15"></div>
                 <div class="patch-item"><img src="assets/img/patch-16.png" alt="Parche 16"></div>
             </div>
