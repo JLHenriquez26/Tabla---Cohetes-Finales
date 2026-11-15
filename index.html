@@ -278,6 +278,11 @@
             font-weight: bold;
         }
 
+        .score-tag {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
         .empty-msg {
             text-align: center;
             color: var(--text-muted);
@@ -369,10 +374,31 @@
 
         <div class="sync-status" id="syncStatus">🔄 Sincronizando con Google Sheets...</div>
 
-        <!-- SECCIÓN 1: Menor Porcentaje de Error (Precisión) -->
+        <!-- TABLA 1: Categoría 1: ALTURA MÁXIMA (Primero) -->
         <div class="table-container">
             <div class="table-header">
-                <span class="table-title">🎯 Categoría 1: Menor % de Error</span>
+                <span class="table-title">🚀 Categoría 1: Altura Máxima</span>
+            </div>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; width: 70px;">Pos</th>
+                        <th>Grupo</th>
+                        <th>Equipo</th>
+                        <th>Cohete</th>
+                        <th>Altura Máxima</th>
+                    </tr>
+                </thead>
+                <tbody id="heightLeaderboardBody">
+                    <tr><td colspan="5" class="empty-msg">Cargando registros...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TABLA 2: Categoría 2: Menor Error Absoluto (Segundo) -->
+        <div class="table-container">
+            <div class="table-header">
+                <span class="table-title">🎯 Categoría 2: Menor Error Absoluto</span>
             </div>
             <table class="leaderboard-table">
                 <thead>
@@ -392,10 +418,10 @@
             </table>
         </div>
 
-        <!-- SECCIÓN 2: Mayor Altura Máxima (Rendimiento) -->
+        <!-- TABLA 3: Categoría 3: Tiro Parabólico (Tercero) -->
         <div class="table-container">
             <div class="table-header">
-                <span class="table-title">🚀 Categoría 2: Altura Máxima</span>
+                <span class="table-title">🎯 Categoría 3: Tiro Parabólico</span>
             </div>
             <table class="leaderboard-table">
                 <thead>
@@ -404,10 +430,10 @@
                         <th>Grupo</th>
                         <th>Equipo</th>
                         <th>Cohete</th>
-                        <th>Altura Máxima</th>
+                        <th>Puntaje de impacto</th>
                     </tr>
                 </thead>
-                <tbody id="heightLeaderboardBody">
+                <tbody id="parabolicLeaderboardBody">
                     <tr><td colspan="5" class="empty-msg">Cargando registros...</td></tr>
                 </tbody>
             </table>
@@ -480,15 +506,16 @@
                 const now = new Date();
                 document.getElementById('syncStatus').innerText = `🟢 Sincronizado a las ${now.toLocaleTimeString()}`;
             } catch (error) {
-                console.error("Error al obtener datos:", error);
+                console.error("Error al conectar con la nube:", error);
                 document.getElementById('syncStatus').innerText = "⚠️ Error al conectar con Google Sheets";
             }
         }
 
         function renderLeaderboards() {
             if (!teams || teams.length === 0) {
-                document.getElementById('errorLeaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('heightLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
+                document.getElementById('errorLeaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">No hay registros aún.</td></tr>`;
+                document.getElementById('parabolicLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
                 return;
             }
 
@@ -496,11 +523,37 @@
                 const theo = parseFloat(item.theoreticalHeight) || 0;
                 const sens = parseFloat(item.sensorHeight) || 0;
                 const maxH = parseFloat(item.maxHeight) || 0;
+                const impactScore = parseFloat(item.impactScore) || 0;
                 const error = theo > 0 ? Math.abs((theo - sens) / theo) * 100 : 0;
-                return { ...item, error, maxH };
+                return { ...item, error, maxH, impactScore };
             });
 
-            // TABLA 1: Ordenada por menor % de error
+            // TABLA 1: Categoría 1: ALTURA MÁXIMA (Ordenada de mayor a menor altura)
+            const heightSorted = [...processed].sort((a, b) => b.maxH - a.maxH);
+            let posHeight = 1;
+            const rankedHeight = heightSorted.map((item, index) => {
+                if (index > 0 && item.maxH !== heightSorted[index - 1].maxH) posHeight = index + 1;
+                return { ...item, pos: posHeight };
+            });
+
+            document.getElementById('heightLeaderboardBody').innerHTML = rankedHeight.map(item => {
+                let badge = `<span class="pos-badge">${item.pos}</span>`;
+                if (item.pos === 1) badge = `<span class="pos-badge pos-1">🥇 1</span>`;
+                else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
+                else if (item.pos === 3) badge = `<span class="pos-badge pos-3">🥉 3</span>`;
+
+                return `
+                    <tr>
+                        <td style="text-align: center;">${badge}</td>
+                        <td>${item.group || '-'}</td>
+                        <td>${item.team || '-'}</td>
+                        <td>${item.rocket || '-'}</td>
+                        <td class="height-tag">${item.maxH} m</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // TABLA 2: Categoría 2: Menor Error Absoluto (Ordenada de menor a mayor error)
             const errorSorted = [...processed].sort((a, b) => a.error - b.error);
             let posError = 1;
             const rankedError = errorSorted.map((item, index) => {
@@ -527,15 +580,15 @@
                 `;
             }).join('');
 
-            // TABLA 2: Ordenada por mayor altura máxima
-            const heightSorted = [...processed].sort((a, b) => b.maxH - a.maxH);
-            let posHeight = 1;
-            const rankedHeight = heightSorted.map((item, index) => {
-                if (index > 0 && item.maxH !== heightSorted[index - 1].maxH) posHeight = index + 1;
-                return { ...item, pos: posHeight };
+            // TABLA 3: Categoría 3: Tiro Parabólico (Ordenada por mayor puntaje de impacto)
+            const parabolicSorted = [...processed].sort((a, b) => b.impactScore - a.impactScore);
+            let posParabolic = 1;
+            const rankedParabolic = parabolicSorted.map((item, index) => {
+                if (index > 0 && item.impactScore !== parabolicSorted[index - 1].impactScore) posParabolic = index + 1;
+                return { ...item, pos: posParabolic };
             });
 
-            document.getElementById('heightLeaderboardBody').innerHTML = rankedHeight.map(item => {
+            document.getElementById('parabolicLeaderboardBody').innerHTML = rankedParabolic.map(item => {
                 let badge = `<span class="pos-badge">${item.pos}</span>`;
                 if (item.pos === 1) badge = `<span class="pos-badge pos-1">🥇 1</span>`;
                 else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
@@ -547,7 +600,7 @@
                         <td>${item.group || '-'}</td>
                         <td>${item.team || '-'}</td>
                         <td>${item.rocket || '-'}</td>
-                        <td class="height-tag">${item.maxH} m</td>
+                        <td class="score-tag">${item.impactScore} pts</td>
                     </tr>
                 `;
             }).join('');
