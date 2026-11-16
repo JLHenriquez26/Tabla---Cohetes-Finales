@@ -69,6 +69,14 @@
             filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
         }
 
+        .logo-nasa-img {
+            max-height: 85px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));
+        }
+
         .rocket-logo-img {
             width: 220px;
             height: 220px;
@@ -180,12 +188,10 @@
             align-items: center;
         }
 
-        /* Hace que los últimos 3 elementos (del 13 al 15) ocupen la última fila de forma centrada y simétrica */
         .patches-grid .patch-item:nth-child(n+13) {
             grid-column: span 1;
         }
 
-        /* Truco para centrar los 3 elementos de la última fila en CSS Grid de 4 columnas */
         .patches-grid .patch-item:nth-child(13) {
             grid-column: 1 / 2;
             justify-self: end;
@@ -197,8 +203,6 @@
             grid-column: 3 / 4;
             justify-self: start;
         }
-        /* Ocultamos una celda imaginaria para equilibrar si es necesario, o dejamos que se adapten con flex/grid fluido. 
-           Una forma más limpia para los últimos 3 es aplicar un contenedor flex inferior o usar subgrid, pero aquí tienes una solución directa por filas: */
 
         .patch-item {
             width: 140px;
@@ -373,6 +377,7 @@
         <header>
             <div class="logos-wrapper">
                 <img src="assets/img/logo-tec.png" alt="Tecnológico de Monterrey" class="logo-tec-img">
+                <img src="assets/img/NASA-logo.jpg" alt="NASA" class="logo-nasa-img">
                 <img src="assets/img/logo-rocket2.jpg" alt="Parche Cohete" class="rocket-logo-img">
             </div>
 
