@@ -496,12 +496,27 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             music.volume = 0.4;
+            
+            // Intenta reproducir automáticamente al cargar la página
             music.play().then(() => {
                 isPlaying = true;
                 musicBtn.innerHTML = "🎵 <span>Pausar Música</span>";
             }).catch(() => {
+                // Si el navegador bloquea la reproducción automática, se reproducirá al primer toque/clic en la página
                 isPlaying = false;
                 musicBtn.innerHTML = "🔇 <span>Reproducir Música</span>";
+                
+                const unlockAudio = () => {
+                    music.play().then(() => {
+                        isPlaying = true;
+                        musicBtn.innerHTML = "🎵 <span>Pausar Música</span>";
+                        document.removeEventListener('click', unlockAudio);
+                        document.removeEventListener('keydown', unlockAudio);
+                    }).catch(e => console.log("Esperando interacción del usuario", e));
+                };
+
+                document.addEventListener('click', unlockAudio, { once: true });
+                document.addEventListener('keydown', unlockAudio, { once: true });
             });
 
             fetchTeams();
