@@ -208,18 +208,22 @@
             overflow: hidden;
             background: rgba(15, 23, 42, 0.6);
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            /* Transición fluida para el tamaño, posición y brillo */
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            z-index: 1;
         }
 
         .patch-item:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 22px rgba(56, 189, 248, 0.6);
+            transform: scale(1.15); /* Aumenta un 15% su tamaño al pasar el cursor */
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.7);
+            z-index: 10; /* Asegura que el parche flotante quede por encima de los vecinos */
         }
 
         .patch-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
         @media (max-width: 680px) {
@@ -378,7 +382,7 @@
                 <img src="assets/img/logo-rocket2.jpg" alt="Parche Cohete" class="rocket-logo-img">
             </div>
 
-            <h1 class="title">🚀 Competencia Final de Cohetes 🚀</h1>
+            <h1 class="title">🚀 Competencia de Cohetes Finales 🚀</h1>
             <h1 class="title"> Guadalajara | 2026 </h1>
             <p class="subtitle">Unidad de Formación F1025B</p>
             
@@ -403,8 +407,8 @@
                 <div class="patch-item"><img src="assets/img/patch-4.png" alt="Parche 4"></div>
                 <div class="patch-item"><img src="assets/img/patch-5.png" alt="Parche 5"></div>
                 <div class="patch-item"><img src="assets/img/patch-6.png" alt="Parche 6"></div>
-                <div class="patch-item"><img src="assets/img/patch-7-2.png" alt="Parche 7"></div>
-                <div class="patch-item"><img src="assets/img/patch-8-2.png" alt="Parche 8"></div>
+                <div class="patch-item"><img src="assets/img/patch-7.png" alt="Parche 7"></div>
+                <div class="patch-item"><img src="assets/img/patch-8.png" alt="Parche 8"></div>
                 <div class="patch-item"><img src="assets/img/patch-9.png" alt="Parche 9"></div>
                 <div class="patch-item"><img src="assets/img/patch-10.png" alt="Parche 10"></div>
                 <div class="patch-item"><img src="assets/img/patch-11.png" alt="Parche 11"></div>
@@ -412,7 +416,7 @@
                 <div class="patch-item"><img src="assets/img/patch-13.png" alt="Parche 13"></div>
                 <div class="patch-item"><img src="assets/img/patch-15.png" alt="Parche 15"></div>
                 <div class="patch-item"><img src="assets/img/patch-16-2.png" alt="Parche 16"></div>
-                <div class="patch-item"><img src="assets/img/patch-17-2.png" alt="Parche 17"></div>
+                <div class="patch-item"><img src="assets/img/patch-17.png" alt="Parche 17"></div>
             </div>
         </div>
 
@@ -624,7 +628,7 @@
                 else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
                 else if (item.pos === 3) badge = `<span class="pos-badge pos-3">🥉 3</span>`;
 
-                return `
+                `
                     <tr>
                         <td style="text-align: center;">${badge}</td>
                         <td>${item.group || '-'}</td>
