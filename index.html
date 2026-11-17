@@ -58,19 +58,28 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 2.5rem;
+            gap: 2.25rem;
             margin-bottom: 1.75rem;
         }
 
+        .top-logos-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+
         .logo-tec-img {
-            max-height: 80px;
+            height: 80px;
             width: auto;
             object-fit: contain;
             filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
         }
 
         .logo-nasa-img {
-            max-height: 85px;
+            height: 80px;
             width: auto;
             object-fit: contain;
             border-radius: 8px;
@@ -229,6 +238,12 @@
         }
 
         @media (max-width: 680px) {
+            .top-logos-row {
+                gap: 1.5rem;
+            }
+            .logo-tec-img, .logo-nasa-img {
+                height: 60px;
+            }
             .patches-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.25rem;
@@ -377,8 +392,10 @@
     <div class="container">
         <header>
             <div class="logos-wrapper">
-                <img src="assets/img/logo-tec.png" alt="Tecnológico de Monterrey" class="logo-tec-img">
-                <img src="assets/img/NASA-logo.jpeg" alt="NASA" class="logo-nasa-img">
+                <div class="top-logos-row">
+                    <img src="assets/img/logo-tec.png" alt="Tecnológico de Monterrey" class="logo-tec-img">
+                    <img src="assets/img/NASA-logo.jpeg" alt="NASA" class="logo-nasa-img">
+                </div>
                 <img src="assets/img/logo-rocket2.jpg" alt="Parche Cohete" class="rocket-logo-img">
             </div>
 
@@ -497,12 +514,10 @@
         window.addEventListener('DOMContentLoaded', () => {
             music.volume = 0.4;
             
-            // Intenta reproducir automáticamente al cargar la página
             music.play().then(() => {
                 isPlaying = true;
                 musicBtn.innerHTML = "🎵 <span>Pausar Música</span>";
             }).catch(() => {
-                // Si el navegador bloquea la reproducción automática, se reproducirá al primer toque/clic en la página
                 isPlaying = false;
                 musicBtn.innerHTML = "🔇 <span>Reproducir Música</span>";
                 
