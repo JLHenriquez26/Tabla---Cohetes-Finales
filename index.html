@@ -159,7 +159,7 @@
             letter-spacing: 1px;
         }
 
-        /* Parches de Misión - 15 parches (4 en las primeras filas, 3 en la última) */
+        /* Parches de Misión - 15 parches (4 en las primeras 3 filas, 3 centrados en la última) */
         .patches-section {
             background: var(--card-bg);
             border: 1px solid var(--neon-cyan);
@@ -182,26 +182,25 @@
 
         .patches-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(8, 1fr);
+            row-gap: 1.5rem;
+            column-gap: 0.75rem;
             justify-items: center;
             align-items: center;
         }
 
-        .patches-grid .patch-item:nth-child(n+13) {
-            grid-column: span 1;
+        .patches-grid .patch-item {
+            grid-column: span 2;
         }
 
         .patches-grid .patch-item:nth-child(13) {
-            grid-column: 1 / 2;
-            justify-self: end;
+            grid-column: 2 / 4;
         }
         .patches-grid .patch-item:nth-child(14) {
-            grid-column: 2 / 3;
+            grid-column: 4 / 6;
         }
         .patches-grid .patch-item:nth-child(15) {
-            grid-column: 3 / 4;
-            justify-self: start;
+            grid-column: 6 / 8;
         }
 
         .patch-item {
@@ -234,9 +233,11 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.25rem;
             }
-            .patches-grid .patch-item:nth-child(n) {
+            .patches-grid .patch-item {
                 grid-column: auto !important;
-                justify-self: center !important;
+            }
+            .patches-grid .patch-item:nth-child(15) {
+                grid-column: 1 / -1 !important;
             }
             .patch-item {
                 width: 120px;
