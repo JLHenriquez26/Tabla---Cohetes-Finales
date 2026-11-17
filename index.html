@@ -168,7 +168,7 @@
             letter-spacing: 1px;
         }
 
-        /* Parches de Misión - 15 parches (4 en las primeras 3 filas, 3 centrados en la última) */
+        /* Parches de Misión - 16 parches (4 filas de 4 parches) */
         .patches-section {
             background: var(--card-bg);
             border: 1px solid var(--neon-cyan);
@@ -191,25 +191,10 @@
 
         .patches-grid {
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            row-gap: 1.5rem;
-            column-gap: 0.75rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
             justify-items: center;
             align-items: center;
-        }
-
-        .patches-grid .patch-item {
-            grid-column: span 2;
-        }
-
-        .patches-grid .patch-item:nth-child(13) {
-            grid-column: 2 / 4;
-        }
-        .patches-grid .patch-item:nth-child(14) {
-            grid-column: 4 / 6;
-        }
-        .patches-grid .patch-item:nth-child(15) {
-            grid-column: 6 / 8;
         }
 
         .patch-item {
@@ -247,12 +232,6 @@
             .patches-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.25rem;
-            }
-            .patches-grid .patch-item {
-                grid-column: auto !important;
-            }
-            .patches-grid .patch-item:nth-child(15) {
-                grid-column: 1 / -1 !important;
             }
             .patch-item {
                 width: 120px;
@@ -432,6 +411,7 @@
                 <div class="patch-item"><img src="assets/img/patch-13.png" alt="Parche 13"></div>
                 <div class="patch-item"><img src="assets/img/patch-15.png" alt="Parche 15"></div>
                 <div class="patch-item"><img src="assets/img/patch-16-2.png" alt="Parche 16"></div>
+                <div class="patch-item"><img src="assets/img/patch-17.png" alt="Parche 17"></div>
             </div>
         </div>
 
