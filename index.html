@@ -186,7 +186,26 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.85rem;
+        }
+
+        /* Leyenda de significado de banderas */
+        .flag-legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.6rem;
+        }
+
+        .flag-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
         }
 
         .patches-grid {
@@ -440,6 +459,18 @@
 
         <div class="patches-section">
             <div class="patches-title">🎖️ Parches de Misión de los Equipos 🎖️</div>
+
+            <div class="flag-legend">
+                <div class="flag-legend-item">
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                    <span>= Vuelo NO autorizado</span>
+                </div>
+                <div class="flag-legend-item">
+                    <span class="patch-flag flag-green"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                    <span>= Vuelo autorizado</span>
+                </div>
+            </div>
+
             <div class="patches-grid">
                 
                 <!-- PARCHE 1 -->
