@@ -192,9 +192,17 @@
         .patches-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
+            gap: 1.75rem 1.5rem;
             justify-items: center;
+            align-items: start;
+        }
+
+        .patch-card {
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            gap: 0.65rem;
+            position: relative;
         }
 
         .patch-item {
@@ -226,6 +234,35 @@
             object-fit: cover;
         }
 
+        /* Banderita fija de estado (cambia la clase a "flag-green" para ponerla verde) */
+        .patch-flag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+        }
+
+        .patch-flag svg {
+            width: 18px;
+            height: 18px;
+            fill: #ef4444;
+            filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.8));
+        }
+
+        .patch-flag.flag-green {
+            border-color: rgba(16, 185, 129, 0.55);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .patch-flag.flag-green svg {
+            fill: #10b981;
+            filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.85));
+        }
+
         @media (max-width: 680px) {
             .top-logos-row {
                 gap: 1.5rem;
@@ -235,7 +272,7 @@
             }
             .patches-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 1.25rem;
+                gap: 1.5rem 1.25rem;
             }
             .patch-item {
                 width: 120px;
@@ -404,22 +441,103 @@
         <div class="patches-section">
             <div class="patches-title">🎖️ Parches de Misión de los Equipos 🎖️</div>
             <div class="patches-grid">
-                <div class="patch-item"><img src="assets/img/patch-1.png" alt="Parche 1"></div>
-                <div class="patch-item"><img src="assets/img/patch-2.png" alt="Parche 2"></div>
-                <div class="patch-item"><img src="assets/img/patch-3-2.png" alt="Parche 3"></div>
-                <div class="patch-item"><img src="assets/img/patch-4-2.png" alt="Parche 4"></div>
-                <div class="patch-item"><img src="assets/img/patch-5.png" alt="Parche 5"></div>
-                <div class="patch-item"><img src="assets/img/patch-6.png" alt="Parche 6"></div>
-                <div class="patch-item"><img src="assets/img/patch-7-2.png" alt="Parche 7"></div>
-                <div class="patch-item"><img src="assets/img/patch-8-2.png" alt="Parche 8"></div>
-                <div class="patch-item"><img src="assets/img/patch-9-2.png" alt="Parche 9"></div>
-                <div class="patch-item"><img src="assets/img/patch-10-2.png" alt="Parche 10"></div>
-                <div class="patch-item"><img src="assets/img/patch-11-2.png" alt="Parche 11"></div>
-                <div class="patch-item"><img src="assets/img/patch-12-2.png" alt="Parche 12"></div>
-                <div class="patch-item"><img src="assets/img/patch-13-2.png" alt="Parche 13"></div>
-                <div class="patch-item"><img src="assets/img/patch-15-2-2.png" alt="Parche 15"></div>
-                <div class="patch-item"><img src="assets/img/patch-16-2.png" alt="Parche 16"></div>
-                <div class="patch-item"><img src="assets/img/patch-17-2.png" alt="Parche 17"></div>
+                
+                <!-- PARCHE 1 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-1.png" alt="Parche 1"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 2 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-2.png" alt="Parche 2"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 3 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-3-2.png" alt="Parche 3"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 4 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-4-2.png" alt="Parche 4"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 5 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-5.png" alt="Parche 5"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 6 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-6.png" alt="Parche 6"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 7 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-7-2.png" alt="Parche 7"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 8 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-8-2.png" alt="Parche 8"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 9 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-9-2.png" alt="Parche 9"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 10 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-10-2.png" alt="Parche 10"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 11 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-11-2.png" alt="Parche 11"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 12 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-12-2.png" alt="Parche 12"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 13 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-13-2.png" alt="Parche 13"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 15 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-15-2-2.png" alt="Parche 15"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 16 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-16-2.png" alt="Parche 16"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
+                <!-- PARCHE 17 -->
+                <div class="patch-card">
+                    <div class="patch-item"><img src="assets/img/patch-17-2.png" alt="Parche 17"></div>
+                    <span class="patch-flag"><svg viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+                </div>
+
             </div>
         </div>
 
