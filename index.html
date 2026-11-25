@@ -784,7 +784,7 @@
                 return { ...item, _id: idx, diff, maxH, score };
             });
 
-            // TABLA 1: Categoría 1: ALTURA MÁXIMA (Mayor a menor: 1.º lugar el de mayor metros)
+            // TABLA 1: Categoría 1: ALTURA MÁXIMA (Mayor a menor)
             const heightSorted = [...processed].sort((a, b) => b.maxH - a.maxH);
             let posHeight = 1;
             const rankedHeight = heightSorted.map((item, index) => {
@@ -861,7 +861,7 @@
                 `;
             }).join('');
 
-            // TABLA GENERAL: Promedio de posiciones en las 3 categorías (Solo Top 3)
+            // TABLA GENERAL: Promedio de posiciones + Desempate en cascada (Solo Top 3)
             const heightPosMap = new Map(rankedHeight.map(item => [item._id, item.pos]));
             const diffPosMap = new Map(rankedDiff.map(item => [item._id, item.pos]));
             const parabolicPosMap = new Map(rankedParabolic.map(item => [item._id, item.pos]));
@@ -871,17 +871,21 @@
                 const p2 = diffPosMap.get(item._id);
                 const p3 = parabolicPosMap.get(item._id);
                 const avg = (p1 + p2 + p3) / 3;
-                return { ...item, p1, p2, p3, avg };
+                const firstPlaces = [p1, p2, p3].filter(pos => pos === 1).length;
+                return { ...item, p1, p2, p3, avg, firstPlaces };
             });
 
-            const overallSorted = [...overallWithAvg].sort((a, b) => a.avg - b.avg);
-            let posOverall = 1;
-            const rankedOverall = overallSorted.map((item, index) => {
-                if (index > 0 && Math.abs(item.avg - overallSorted[index - 1].avg) > 1e-6) {
-                    posOverall = index + 1;
-                }
-                return { ...item, pos: posOverall };
+            // 1. Menor promedio -> 2. Más #1 -> 3. Mejor posición en Altura Máxima
+            const overallSorted = [...overallWithAvg].sort((a, b) => {
+                if (Math.abs(a.avg - b.avg) > 1e-6) return a.avg - b.avg;
+                if (b.firstPlaces !== a.firstPlaces) return b.firstPlaces - a.firstPlaces;
+                return a.p1 - b.p1;
             });
+
+            const rankedOverall = overallSorted.map((item, index) => ({
+                ...item,
+                pos: index + 1
+            }));
 
             const topThreeOverall = rankedOverall.filter(item => item.pos <= 3);
 
