@@ -383,24 +383,11 @@
         .pos-2 { background: rgba(203, 213, 225, 0.15); color: var(--silver); border: 1px solid var(--silver); }
         .pos-3 { background: rgba(217, 119, 6, 0.15); color: var(--bronze); border: 1px solid var(--bronze); }
 
-        .diff-tag {
+        .diff-tag,
+        .height-tag,
+        .score-tag {
             color: var(--neon-green);
             font-weight: bold;
-        }
-
-        .height-tag {
-            color: var(--neon-cyan);
-            font-weight: bold;
-        }
-
-        .score-tag {
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        .avg-tag {
-            color: var(--gold);
-            font-weight: 800;
         }
 
         .empty-msg {
@@ -595,7 +582,7 @@
         <!-- TABLA GENERAL: Top 3 por Promedio de Posiciones -->
         <div class="table-container overall-table">
             <div class="table-header">
-                <span class="table-title">🏆 Clasificación General — Top 3 (Promedio de Posiciones)</span>
+                <span class="table-title">🏆 Clasificación General — Top 3</span>
             </div>
             <table class="leaderboard-table">
                 <thead>
@@ -607,11 +594,10 @@
                         <th style="text-align: center;">Pos. Altura</th>
                         <th style="text-align: center;">Pos. Diferencia</th>
                         <th style="text-align: center;">Pos. Parabólico</th>
-                        <th>Promedio</th>
                     </tr>
                 </thead>
                 <tbody id="overallLeaderboardBody">
-                    <tr><td colspan="8" class="empty-msg">Cargando registros...</td></tr>
+                    <tr><td colspan="7" class="empty-msg">Cargando registros...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -768,7 +754,7 @@
 
         function renderLeaderboards() {
             if (!teams || teams.length === 0) {
-                document.getElementById('overallLeaderboardBody').innerHTML = `<tr><td colspan="8" class="empty-msg">No hay registros aún.</td></tr>`;
+                document.getElementById('overallLeaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('heightLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('diffLeaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('parabolicLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
@@ -904,7 +890,6 @@
                         <td style="text-align: center;">#${item.p1}</td>
                         <td style="text-align: center;">#${item.p2}</td>
                         <td style="text-align: center;">#${item.p3}</td>
-                        <td class="avg-tag">${item.avg.toFixed(2)}</td>
                     </tr>
                 `;
             }).join('');
