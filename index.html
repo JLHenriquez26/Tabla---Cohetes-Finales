@@ -847,7 +847,7 @@
                 `;
             }).join('');
 
-            // TABLA GENERAL: Promedio de posiciones + Desempate en cascada + Empates compartidos (Solo Top 3)
+            // TABLA GENERAL: Promedio de posiciones + Empates exactos sin importar categoría (Solo Top 3)
             const heightPosMap = new Map(rankedHeight.map(item => [item._id, item.pos]));
             const diffPosMap = new Map(rankedDiff.map(item => [item._id, item.pos]));
             const parabolicPosMap = new Map(rankedParabolic.map(item => [item._id, item.pos]));
@@ -857,21 +857,26 @@
                 const p2 = diffPosMap.get(item._id);
                 const p3 = parabolicPosMap.get(item._id);
                 const avg = (p1 + p2 + p3) / 3;
-                const firstPlaces = [p1, p2, p3].filter(pos => pos === 1).length;
-                return { ...item, p1, p2, p3, avg, firstPlaces };
+                const sortedPositions = [p1, p2, p3].sort((x, y) => x - y);
+                return { ...item, p1, p2, p3, avg, sortedPositions };
             });
 
-            const isSameStanding = (a, b) =>
-                Math.abs(a.avg - b.avg) <= 1e-6 &&
-                a.firstPlaces === b.firstPlaces &&
-                a.p1 === b.p1;
-
-            // 1. Menor promedio -> 2. Más #1 -> 3. Mejor posición en Altura Máxima
+            // Ordenar por menor promedio y luego comparando las posiciones ordenadas (ej. [1,1,2] vs [1,2,2])
             const overallSorted = [...overallWithAvg].sort((a, b) => {
                 if (Math.abs(a.avg - b.avg) > 1e-6) return a.avg - b.avg;
-                if (b.firstPlaces !== a.firstPlaces) return b.firstPlaces - a.firstPlaces;
-                return a.p1 - b.p1;
+                for (let i = 0; i < 3; i++) {
+                    if (a.sortedPositions[i] !== b.sortedPositions[i]) {
+                        return a.sortedPositions[i] - b.sortedPositions[i];
+                    }
+                }
+                return 0;
             });
+
+            // Empatan si tienen exactamente el mismo conjunto de posiciones sin importar en qué categoría
+            const isSameStanding = (a, b) =>
+                a.sortedPositions[0] === b.sortedPositions[0] &&
+                a.sortedPositions[1] === b.sortedPositions[1] &&
+                a.sortedPositions[2] === b.sortedPositions[2];
 
             let posOverall = 1;
             const rankedOverall = overallSorted.map((item, index) => {
