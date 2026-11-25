@@ -847,7 +847,7 @@
                 `;
             }).join('');
 
-            // TABLA GENERAL: Promedio de posiciones + Desempate en cascada (Solo Top 3)
+            // TABLA GENERAL: Promedio de posiciones + Desempate en cascada + Empates compartidos (Solo Top 3)
             const heightPosMap = new Map(rankedHeight.map(item => [item._id, item.pos]));
             const diffPosMap = new Map(rankedDiff.map(item => [item._id, item.pos]));
             const parabolicPosMap = new Map(rankedParabolic.map(item => [item._id, item.pos]));
@@ -861,6 +861,11 @@
                 return { ...item, p1, p2, p3, avg, firstPlaces };
             });
 
+            const isSameStanding = (a, b) =>
+                Math.abs(a.avg - b.avg) <= 1e-6 &&
+                a.firstPlaces === b.firstPlaces &&
+                a.p1 === b.p1;
+
             // 1. Menor promedio -> 2. Más #1 -> 3. Mejor posición en Altura Máxima
             const overallSorted = [...overallWithAvg].sort((a, b) => {
                 if (Math.abs(a.avg - b.avg) > 1e-6) return a.avg - b.avg;
@@ -868,10 +873,13 @@
                 return a.p1 - b.p1;
             });
 
-            const rankedOverall = overallSorted.map((item, index) => ({
-                ...item,
-                pos: index + 1
-            }));
+            let posOverall = 1;
+            const rankedOverall = overallSorted.map((item, index) => {
+                if (index > 0 && !isSameStanding(item, overallSorted[index - 1])) {
+                    posOverall = index + 1;
+                }
+                return { ...item, pos: posOverall };
+            });
 
             const topThreeOverall = rankedOverall.filter(item => item.pos <= 3);
 
