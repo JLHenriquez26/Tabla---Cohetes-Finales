@@ -383,7 +383,7 @@
         .pos-2 { background: rgba(203, 213, 225, 0.15); color: var(--silver); border: 1px solid var(--silver); }
         .pos-3 { background: rgba(217, 119, 6, 0.15); color: var(--bronze); border: 1px solid var(--bronze); }
 
-        .error-tag {
+        .diff-tag {
             color: var(--neon-green);
             font-weight: bold;
         }
@@ -592,10 +592,10 @@
 
         <div class="sync-status" id="syncStatus">🔄 Sincronizando con Google Sheets...</div>
 
-        <!-- TABLA GENERAL: Promedio de las 3 Categorías -->
+        <!-- TABLA GENERAL: Top 3 por Promedio de Posiciones -->
         <div class="table-container overall-table">
             <div class="table-header">
-                <span class="table-title">🏆 Clasificación General (Promedio de Categorías)</span>
+                <span class="table-title">🏆 Clasificación General — Top 3 (Promedio de Posiciones)</span>
             </div>
             <table class="leaderboard-table">
                 <thead>
@@ -605,7 +605,7 @@
                         <th>Equipo</th>
                         <th>Cohete</th>
                         <th style="text-align: center;">Pos. Altura</th>
-                        <th style="text-align: center;">Pos. Error</th>
+                        <th style="text-align: center;">Pos. Diferencia</th>
                         <th style="text-align: center;">Pos. Parabólico</th>
                         <th>Promedio</th>
                     </tr>
@@ -637,10 +637,10 @@
             </table>
         </div>
 
-        <!-- TABLA 2: Categoría 2: Menor Error Absoluto -->
+        <!-- TABLA 2: Categoría 2: Menor Diferencia -->
         <div class="table-container">
             <div class="table-header">
-                <span class="table-title">🎯 Categoría 2: Menor Error Absoluto</span>
+                <span class="table-title">🎯 Categoría 2: Menor Diferencia</span>
             </div>
             <table class="leaderboard-table">
                 <thead>
@@ -651,10 +651,10 @@
                         <th>Cohete</th>
                         <th>Altura Teórica</th>
                         <th>Altura Sensor</th>
-                        <th>% Error</th>
+                        <th>Diferencia</th>
                     </tr>
                 </thead>
-                <tbody id="errorLeaderboardBody">
+                <tbody id="diffLeaderboardBody">
                     <tr><td colspan="7" class="empty-msg">Cargando registros...</td></tr>
                 </tbody>
             </table>
@@ -770,7 +770,7 @@
             if (!teams || teams.length === 0) {
                 document.getElementById('overallLeaderboardBody').innerHTML = `<tr><td colspan="8" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('heightLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
-                document.getElementById('errorLeaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">No hay registros aún.</td></tr>`;
+                document.getElementById('diffLeaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('parabolicLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
                 return;
             }
@@ -780,11 +780,11 @@
                 const sens = parseFloat(item.sensorHeight) || 0;
                 const maxH = parseFloat(item.maximumHeight) || 0;
                 const score = parseFloat(item.parabolicScore) || 0;
-                const error = theo > 0 ? Math.abs((theo - sens) / theo) * 100 : 0;
-                return { ...item, _id: idx, error, maxH, score };
+                const diff = Math.abs(theo - sens);
+                return { ...item, _id: idx, diff, maxH, score };
             });
 
-            // TABLA 1: Categoría 1: ALTURA MÁXIMA (Mayor a menor)
+            // TABLA 1: Categoría 1: ALTURA MÁXIMA (Mayor a menor: 1.º lugar el de mayor metros)
             const heightSorted = [...processed].sort((a, b) => b.maxH - a.maxH);
             let posHeight = 1;
             const rankedHeight = heightSorted.map((item, index) => {
@@ -809,15 +809,15 @@
                 `;
             }).join('');
 
-            // TABLA 2: Categoría 2: Menor Error Absoluto (Menor a mayor)
-            const errorSorted = [...processed].sort((a, b) => a.error - b.error);
-            let posError = 1;
-            const rankedError = errorSorted.map((item, index) => {
-                if (index > 0 && item.error !== errorSorted[index - 1].error) posError = index + 1;
-                return { ...item, pos: posError };
+            // TABLA 2: Categoría 2: Menor Diferencia (Menor a mayor diferencia entre teórica y sensor)
+            const diffSorted = [...processed].sort((a, b) => a.diff - b.diff);
+            let posDiff = 1;
+            const rankedDiff = diffSorted.map((item, index) => {
+                if (index > 0 && item.diff !== diffSorted[index - 1].diff) posDiff = index + 1;
+                return { ...item, pos: posDiff };
             });
 
-            document.getElementById('errorLeaderboardBody').innerHTML = rankedError.map(item => {
+            document.getElementById('diffLeaderboardBody').innerHTML = rankedDiff.map(item => {
                 let badge = `<span class="pos-badge">${item.pos}</span>`;
                 if (item.pos === 1) badge = `<span class="pos-badge pos-1">🥇 1</span>`;
                 else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
@@ -831,7 +831,7 @@
                         <td>${item.rocket || '-'}</td>
                         <td>${item.theoreticalHeight} m</td>
                         <td>${item.sensorHeight} m</td>
-                        <td class="error-tag">${item.error.toFixed(2)}%</td>
+                        <td class="diff-tag">${item.diff.toFixed(2)} m</td>
                     </tr>
                 `;
             }).join('');
@@ -861,14 +861,14 @@
                 `;
             }).join('');
 
-            // TABLA GENERAL: Promedio de posiciones en las 3 categorías (Menor promedio = mejor lugar)
+            // TABLA GENERAL: Promedio de posiciones en las 3 categorías (Solo Top 3)
             const heightPosMap = new Map(rankedHeight.map(item => [item._id, item.pos]));
-            const errorPosMap = new Map(rankedError.map(item => [item._id, item.pos]));
+            const diffPosMap = new Map(rankedDiff.map(item => [item._id, item.pos]));
             const parabolicPosMap = new Map(rankedParabolic.map(item => [item._id, item.pos]));
 
             const overallWithAvg = processed.map(item => {
                 const p1 = heightPosMap.get(item._id);
-                const p2 = errorPosMap.get(item._id);
+                const p2 = diffPosMap.get(item._id);
                 const p3 = parabolicPosMap.get(item._id);
                 const avg = (p1 + p2 + p3) / 3;
                 return { ...item, p1, p2, p3, avg };
@@ -883,7 +883,9 @@
                 return { ...item, pos: posOverall };
             });
 
-            document.getElementById('overallLeaderboardBody').innerHTML = rankedOverall.map(item => {
+            const topThreeOverall = rankedOverall.filter(item => item.pos <= 3);
+
+            document.getElementById('overallLeaderboardBody').innerHTML = topThreeOverall.map(item => {
                 let badge = `<span class="pos-badge">${item.pos}</span>`;
                 if (item.pos === 1) badge = `<span class="pos-badge pos-1">🥇 1</span>`;
                 else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
