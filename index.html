@@ -67,28 +67,17 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 2.5rem;
-            flex-wrap: wrap;
+            gap: 2rem;
+            flex-wrap: nowrap;
+            width: 100%;
         }
 
-        .logo-tec-img {
-            height: 80px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
-        }
-
-        .logo-nasa-img {
-            height: 80px;
-            width: auto;
-            object-fit: contain;
-            border-radius: 8px;
-            filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));
-        }
-
+        .logo-tec-img,
+        .logo-nasa-img,
         .logo-third-img {
-            height: 80px;
+            height: 75px;
             width: auto;
+            max-width: 30%;
             object-fit: contain;
             border-radius: 8px;
             filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));
@@ -292,10 +281,11 @@
 
         @media (max-width: 680px) {
             .top-logos-row {
-                gap: 1.5rem;
+                gap: 0.85rem;
             }
             .logo-tec-img, .logo-nasa-img, .logo-third-img {
-                height: 60px;
+                height: 48px;
+                max-width: 30%;
             }
             .patches-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -322,6 +312,11 @@
             margin-bottom: 2rem;
         }
 
+        .table-container.overall-table {
+            border-color: var(--gold);
+            box-shadow: 0 0 28px rgba(251, 191, 36, 0.25);
+        }
+
         .table-header {
             margin-bottom: 1rem;
         }
@@ -332,6 +327,10 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .overall-table .table-title {
+            color: var(--gold);
         }
 
         .leaderboard-table {
@@ -351,6 +350,11 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             background: rgba(56, 189, 248, 0.05);
+        }
+
+        .overall-table th {
+            color: var(--gold);
+            background: rgba(251, 191, 36, 0.07);
         }
 
         .leaderboard-table td {
@@ -392,6 +396,11 @@
         .score-tag {
             color: var(--gold);
             font-weight: bold;
+        }
+
+        .avg-tag {
+            color: var(--gold);
+            font-weight: 800;
         }
 
         .empty-msg {
@@ -445,7 +454,7 @@
                 <div class="top-logos-row">
                     <img src="assets/img/logo-tec.png" alt="Tecnológico de Monterrey" class="logo-tec-img">
                     <img src="assets/img/NASA-logo.jpeg" alt="NASA" class="logo-nasa-img">
-                    <img src="assets/img/ignitia-logo.png" alt="Tercer Logo" class="logo-third-img">
+                    <img src="assets/img/ignitia-logo.png" alt="IGNITIA" class="logo-third-img">
                 </div>
                 <img src="assets/img/logo-rocket2.jpg" alt="Parche Cohete" class="rocket-logo-img">
             </div>
@@ -582,6 +591,30 @@
         </div>
 
         <div class="sync-status" id="syncStatus">🔄 Sincronizando con Google Sheets...</div>
+
+        <!-- TABLA GENERAL: Promedio de las 3 Categorías -->
+        <div class="table-container overall-table">
+            <div class="table-header">
+                <span class="table-title">🏆 Clasificación General (Promedio de Categorías)</span>
+            </div>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; width: 70px;">Pos</th>
+                        <th>Grupo</th>
+                        <th>Equipo</th>
+                        <th>Cohete</th>
+                        <th style="text-align: center;">Pos. Altura</th>
+                        <th style="text-align: center;">Pos. Error</th>
+                        <th style="text-align: center;">Pos. Parabólico</th>
+                        <th>Promedio</th>
+                    </tr>
+                </thead>
+                <tbody id="overallLeaderboardBody">
+                    <tr><td colspan="8" class="empty-msg">Cargando registros...</td></tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- TABLA 1: Categoría 1: ALTURA MÁXIMA -->
         <div class="table-container">
@@ -735,19 +768,20 @@
 
         function renderLeaderboards() {
             if (!teams || teams.length === 0) {
+                document.getElementById('overallLeaderboardBody').innerHTML = `<tr><td colspan="8" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('heightLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('errorLeaderboardBody').innerHTML = `<tr><td colspan="7" class="empty-msg">No hay registros aún.</td></tr>`;
                 document.getElementById('parabolicLeaderboardBody').innerHTML = `<tr><td colspan="5" class="empty-msg">No hay registros aún.</td></tr>`;
                 return;
             }
 
-            const processed = teams.map(item => {
+            const processed = teams.map((item, idx) => {
                 const theo = parseFloat(item.theoreticalHeight) || 0;
                 const sens = parseFloat(item.sensorHeight) || 0;
                 const maxH = parseFloat(item.maximumHeight) || 0;
                 const score = parseFloat(item.parabolicScore) || 0;
                 const error = theo > 0 ? Math.abs((theo - sens) / theo) * 100 : 0;
-                return { ...item, error, maxH, score };
+                return { ...item, _id: idx, error, maxH, score };
             });
 
             // TABLA 1: Categoría 1: ALTURA MÁXIMA (Mayor a menor)
@@ -826,8 +860,49 @@
                     </tr>
                 `;
             }).join('');
+
+            // TABLA GENERAL: Promedio de posiciones en las 3 categorías (Menor promedio = mejor lugar)
+            const heightPosMap = new Map(rankedHeight.map(item => [item._id, item.pos]));
+            const errorPosMap = new Map(rankedError.map(item => [item._id, item.pos]));
+            const parabolicPosMap = new Map(rankedParabolic.map(item => [item._id, item.pos]));
+
+            const overallWithAvg = processed.map(item => {
+                const p1 = heightPosMap.get(item._id);
+                const p2 = errorPosMap.get(item._id);
+                const p3 = parabolicPosMap.get(item._id);
+                const avg = (p1 + p2 + p3) / 3;
+                return { ...item, p1, p2, p3, avg };
+            });
+
+            const overallSorted = [...overallWithAvg].sort((a, b) => a.avg - b.avg);
+            let posOverall = 1;
+            const rankedOverall = overallSorted.map((item, index) => {
+                if (index > 0 && Math.abs(item.avg - overallSorted[index - 1].avg) > 1e-6) {
+                    posOverall = index + 1;
+                }
+                return { ...item, pos: posOverall };
+            });
+
+            document.getElementById('overallLeaderboardBody').innerHTML = rankedOverall.map(item => {
+                let badge = `<span class="pos-badge">${item.pos}</span>`;
+                if (item.pos === 1) badge = `<span class="pos-badge pos-1">🥇 1</span>`;
+                else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
+                else if (item.pos === 3) badge = `<span class="pos-badge pos-3">🥉 3</span>`;
+
+                return `
+                    <tr>
+                        <td style="text-align: center;">${badge}</td>
+                        <td>${item.group || '-'}</td>
+                        <td>${item.team || '-'}</td>
+                        <td>${item.rocket || '-'}</td>
+                        <td style="text-align: center;">#${item.p1}</td>
+                        <td style="text-align: center;">#${item.p2}</td>
+                        <td style="text-align: center;">#${item.p3}</td>
+                        <td class="avg-tag">${item.avg.toFixed(2)}</td>
+                    </tr>
+                `;
+            }).join('');
         }
     </script>
 </body>
 </html>
-
