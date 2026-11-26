@@ -714,10 +714,10 @@
 
         <div class="sync-status" id="syncStatus">🔄 Sincronizando con Google Sheets...</div>
 
-        <!-- TABLA GENERAL: Top 3 por Promedio de Posiciones -->
+        <!-- TABLA GENERAL: Todas las posiciones por Promedio de Posiciones -->
         <div class="table-container overall-table">
             <div class="table-header">
-                <span class="table-title">🏆 Clasificación General — Top 3</span>
+                <span class="table-title">🏆 Clasificación General</span>
             </div>
             <table class="leaderboard-table">
                 <thead>
@@ -982,7 +982,7 @@
                 `;
             }).join('');
 
-            // TABLA GENERAL: Promedio de posiciones + Empates exactos sin importar categoría (Solo Top 3)
+            // TABLA GENERAL: Todas las posiciones por Promedio de posiciones + Empates compartidos
             const heightPosMap = new Map(rankedHeight.map(item => [item._id, item.pos]));
             const diffPosMap = new Map(rankedDiff.map(item => [item._id, item.pos]));
             const parabolicPosMap = new Map(rankedParabolic.map(item => [item._id, item.pos]));
@@ -1019,9 +1019,7 @@
                 return { ...item, pos: posOverall };
             });
 
-            const topThreeOverall = rankedOverall.filter(item => item.pos <= 3);
-
-            document.getElementById('overallLeaderboardBody').innerHTML = topThreeOverall.map(item => {
+            document.getElementById('overallLeaderboardBody').innerHTML = rankedOverall.map(item => {
                 let badge = `<span class="pos-badge">${item.pos}</span>`;
                 if (item.pos === 1) badge = `<span class="pos-badge pos-1">🥇 1</span>`;
                 else if (item.pos === 2) badge = `<span class="pos-badge pos-2">🥈 2</span>`;
